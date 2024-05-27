@@ -18,6 +18,7 @@ class _SignUp extends State {
   final TextEditingController _bioCont = TextEditingController();
   final TextEditingController _numberController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
+
   Uint8List?
       _image; //uYGULAMADA GORUNEN DIGER RESIMLER GIBI DEFAULT RESMI UINT NESNESI OLARAK TANIMLA
   bool isLoading = false;
@@ -50,7 +51,9 @@ class _SignUp extends State {
         password: _passController.text,
         userName: _usernameController.text,
         bio: _bioCont.text,
-        file: _image!);
+        file: _image!,
+        userType: _value);
+
     setState(() {
       isLoading = true;
     });
@@ -287,7 +290,7 @@ class _SignUp extends State {
                       width: MediaQuery.of(context).size.width * 0.1,
                     ),
                     Radio(
-                        value: 2,
+                        value: 0,
                         groupValue: _value,
                         onChanged: (value) {
                           setState(() {

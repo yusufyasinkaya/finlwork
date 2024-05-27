@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tiyatrokulubu/screens/utils/global_variables.dart';
@@ -7,22 +9,38 @@ class LayoutScreen extends StatefulWidget {
   _InstagramLayoutScreen createState() => _InstagramLayoutScreen();
 }
 
-class _InstagramLayoutScreen extends State {
+class _InstagramLayoutScreen extends State<LayoutScreen> {
   int _page = 0;
   late PageController pageController;
+  int? userType;
+
   @override
   void initState() {
     super.initState();
     pageController = PageController();
+    fetchUserType();
+  }
+
+  Future<void> fetchUserType() async {
+    try {
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+      DocumentSnapshot userDoc =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      setState(() {
+        userType = userDoc['userType'];
+      });
+    } catch (e) {
+      print("Kullanıcı tipi alınırken hata oluştu: $e");
+    }
   }
 
   @override
   void dispose() {
-    super.dispose();
     pageController.dispose();
+    super.dispose();
   }
 
-  void nagivationTapped(int page) {
+  void navigationTapped(int page) {
     pageController.jumpToPage(page);
   }
 
@@ -36,45 +54,55 @@ class _InstagramLayoutScreen extends State {
   Widget build(BuildContext context) {
     return Scaffold(
       body: PageView(
-        children: homeScreensItems,
+        children: userType == 1
+            ? homeScreensItems
+            : homeScreensItems
+                .where((item) => homeScreensItems.indexOf(item) != 2)
+                .toList(),
         controller: pageController,
         onPageChanged: onPageChange,
         physics: NeverScrollableScrollPhysics(),
       ),
-      //Layout Screen içinden alttaki NavigationBarlar arasında geçişi sağlıyoruz
       bottomNavigationBar: CupertinoTabBar(
         height: MediaQuery.of(context).size.height * 0.07,
         items: [
           BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home,
-                color: _page == 0 ? Colors.black : Colors.black26,
-              ),
-              label: "",
-              backgroundColor: Theme.of(context).colorScheme.primary),
+            icon: Icon(
+              Icons.home,
+              color: _page == 0 ? Colors.black : Colors.black26,
+            ),
+            label: "",
+            backgroundColor: Theme.of(context).colorScheme.primary,
+          ),
           BottomNavigationBarItem(
-              icon: Icon(
-                Icons.search,
-                color: _page == 1 ? Colors.black : Colors.black26,
-              ),
-              label: "",
-              backgroundColor: Theme.of(context).colorScheme.primary),
-          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.search,
+              color: _page == 1 ? Colors.black : Colors.black26,
+            ),
+            label: "",
+            backgroundColor: Theme.of(context).colorScheme.primary,
+          ),
+          if (userType == 1)
+            BottomNavigationBarItem(
               icon: Icon(
                 Icons.add_circle_outline,
                 color: _page == 2 ? Colors.black : Colors.black26,
               ),
               label: "",
-              backgroundColor: Theme.of(context).colorScheme.primary),
+              backgroundColor: Theme.of(context).colorScheme.primary,
+            ),
           BottomNavigationBarItem(
-              icon: Icon(
-                Icons.person,
-                color: _page == 4 ? Colors.black : Colors.black26,
-              ),
-              label: "",
-              backgroundColor: Theme.of(context).colorScheme.primary),
+            icon: Icon(
+              Icons.person,
+              color: userType == 1
+                  ? (_page == 3 ? Colors.black : Colors.black26)
+                  : (_page == 2 ? Colors.black : Colors.black26),
+            ),
+            label: "",
+            backgroundColor: Theme.of(context).colorScheme.primary,
+          ),
         ],
-        onTap: nagivationTapped,
+        onTap: navigationTapped,
       ),
     );
   }

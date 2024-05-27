@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tiyatrokulubu/firestroeMethods/firestroe_meethods.dart';
 import 'package:tiyatrokulubu/models/providers/user_provider.dart';
-import 'package:tiyatrokulubu/screens/comment/comment_screen.dart';
+import 'package:tiyatrokulubu/screens/utils/comment_screen.dart';
 import 'package:tiyatrokulubu/screens/utils/utils.dart';
 
 class Postcard extends StatefulWidget {
@@ -24,6 +24,7 @@ class _PostcardState extends State<Postcard> {
     super.initState();
     getComments();
   }
+
 //Yorumları çekiyoruz
   void getComments() async {
     try {

@@ -24,6 +24,7 @@ class AuthMethods {
     required String bio,
     required String userName,
     required Uint8List file,
+    required int userType,
   }) async {
     String res = "Some Error Occured";
     try {
@@ -34,14 +35,14 @@ class AuthMethods {
         String photoUrl =
             await StorageMethods().uploadImage('prfilePics', file, false);
         model.User user = model.User(
-          username: userName,
-          uid: cred.user!.uid,
-          email: email,
-          bio: bio,
-          followers: [],
-          following: [],
-          photoUrl: photoUrl,
-        );
+            username: userName,
+            uid: cred.user!.uid,
+            email: email,
+            bio: bio,
+            followers: [],
+            following: [],
+            photoUrl: photoUrl,
+            userType: userType);
         await _firestore
             .collection('users')
             .doc(cred.user!.uid)

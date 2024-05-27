@@ -62,7 +62,7 @@ class _SignIn extends State<SignIn> {
                         color: Colors.grey.withOpacity(0.1),
                       )
                     ]),
-                    /* E-Posta Şifre gibi girişler Textfield üzerinden yapılıyor */
+                /* E-Posta Şifre gibi girişler Textfield üzerinden yapılıyor */
                 child: TextField(
                   controller: _numberController,
                   decoration: InputDecoration(
@@ -142,6 +142,7 @@ class _SignIn extends State<SignIn> {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text("Giriş Başarılı"),
                         ));
+
                         Route route = PageRouteBuilder(
                             pageBuilder: (context, animation, animationTime) {
                               return LayoutScreen();
@@ -158,12 +159,13 @@ class _SignIn extends State<SignIn> {
                                 alignment: Alignment.center,
                               );
                             });
+
                         ProfileScreen tmp =
-                            homeScreensItems[4] as ProfileScreen;
+                            homeScreensItems[3] as ProfileScreen;
                         tmp.uid = FirebaseAuth.instance.currentUser!.uid;
 
-                        Navigator.pushAndRemoveUntil(
-                            context, route, (route) => false);
+                        Navigator.pushReplacement(context, route);
+
                         /*  Navigator.push(
                             context,
                             PageRouteBuilder(
